@@ -1,14 +1,19 @@
-from pydantic import BaseModel, Field
-from pydantic_extra_types.pendulum_dt import Date
-from typing import Optional
-from datetime import date
+from pydantic import BaseModel, Field, field_validator
+from datetime import datetime, date
+
 
 class BookBase(BaseModel):
     operazione: str
-    dataRitiro: str
-    dataChiusura: str
+    dataRitiro: date
+    dataChiusura: date | None = None
     autore: str
     titolo: str
+    
+    @field_validator("dataChiusura", mode="before")
+    def empty_string_to_none(cls, v):
+        if v == "" or v is None:
+            return None
+        return v
     
 class BookCreate(BookBase):
     pass
@@ -17,4 +22,17 @@ class Book(BookBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    role: str = "user"
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    role: str
+    fname: str
+    lname: str
+    email_address: str

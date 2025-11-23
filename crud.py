@@ -1,8 +1,15 @@
 from sqlalchemy.orm import Session
-from models import Book
+from models import Book, User
 import schemas
+import crud
 from datetime import datetime
 from sqlalchemy import or_
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def verify_password(password: str, hashed: str):
+    return pwd_context.verify(password, hashed)
 
 def get_book_by_titolo(db: Session, query: str,search_field: str,skip: int = 0,limit: int = 1000):
     if search_field == "titolo":
@@ -50,3 +57,15 @@ def return_book(db: Session, id: str):
     db.commit()
     db.refresh(db_book)
     return db_book
+
+def get_user_by_username(db: Session, username: str):
+    return db.query(User).filter(User.username == username).first()
+
+def authenticate_user(db: Session, username: str, password: str):
+    user = get_user_by_username(db, username)
+    if not user or not verify_password(password, user.hashed_password):
+        return None
+    return user
+
+def chk_book_by_titolo(db: Session, titolo: str):
+    return db.query(Book).filter(Book.titolo == titolo)

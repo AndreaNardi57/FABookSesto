@@ -1,16 +1,28 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.engine import URL
 
 # SQLite database URL
 # SQLALCHEMY_DATABASE_URL = "sqlite:////home/nardia/Lavoro/Andrea/BloccoAppunti/Python/database/BiblioSesto.db"
-SQLALCHEMY_DATABASE_URL = "sqlite:///./BiblioSesto.db"
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./BiblioSesto.db"
+
+# MySQL database URL
+
+SQLALCHEMY_DATABASE_URL = URL.create(
+    drivername="mysql+pymysql",
+    username="biblio",
+    password="biblio@1",  # Raw password
+    host="localhost",
+    database="bibliosesto"
+ )
 
 # Create SQLAlchemy engine
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, 
-    connect_args={"check_same_thread": False}
-)
+# engine = create_engine(
+#     SQLALCHEMY_DATABASE_URL, 
+#     connect_args={"check_same_thread": False}
+# )
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

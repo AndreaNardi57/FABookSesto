@@ -1,18 +1,30 @@
 from sqlalchemy import Column, Integer, String, Date, Boolean, Float,TIMESTAMP
 from database import Base
+from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql import func
 
 class Book(Base):
     __tablename__ = "storico"
 
     id = Column(Integer, primary_key=True, index=True)
-    operazione = Column(String)
-    dataRitiro = Column(String)
-    dataChiusura = Column(String)
-    autore = Column(String)
-    titolo = Column(String, index=True)
+    operazione = Column(String, nullable=False)
+    dataRitiro = Column(Date, server_default=text('curdate()'))
+    dataChiusura = Column(Date, nullable=True)
+    autore = Column(String, nullable=False)
+    titolo = Column(String, nullable=False)
     
-    
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    role = Column(String, default="user", nullable=False)
+    fname = Column(String, nullable=True)
+    lname = Column(String, nullable=True)
+    email_address = Column(String, nullable=True)
+
 # Create the database tables
 from database import engine
 Base.metadata.create_all(bind=engine)
