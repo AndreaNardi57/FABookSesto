@@ -68,4 +68,4 @@ def authenticate_user(db: Session, username: str, password: str):
     return user
 
 def chk_book_by_titolo(db: Session, titolo: str):
-    return db.query(Book).filter(Book.titolo == titolo)
+    return db.query(Book).filter(Book.titolo == titolo).first()
