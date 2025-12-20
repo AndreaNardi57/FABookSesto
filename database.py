@@ -17,12 +17,24 @@ SQLALCHEMY_DATABASE_URL = URL.create(
     database="bibliosesto"
  )
 
+PG_DATABASE_URL = URL.create(
+    drivername="postgresql+psycopg2",
+    username="biblio",
+    password="biblio@1",
+    host="localhost",
+    database="bibliosesto"
+    )
+
 # Create SQLAlchemy engine
 # engine = create_engine(
 #     SQLALCHEMY_DATABASE_URL, 
 #     connect_args={"check_same_thread": False}
 # )
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# Per MySQL
+# engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+# Per PostgreSQL
+engine = create_engine(PG_DATABASE_URL)
 
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

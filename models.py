@@ -4,12 +4,15 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql import func
 
+# Date_Value = 'curdate()'
+Date_Value = 'CURRENT_DATE'
+
 class Book(Base):
     __tablename__ = "storico"
 
     id = Column(Integer, primary_key=True, index=True)
     operazione = Column(String, nullable=False)
-    dataRitiro = Column(Date, server_default=text('curdate()'))
+    dataRitiro = Column(Date, server_default=text(Date_Value))
     dataChiusura = Column(Date, nullable=True)
     autore = Column(String, nullable=False)
     titolo = Column(String, nullable=False)
