@@ -34,7 +34,8 @@ PG_DATABASE_URL = URL.create(
 # engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 # Per PostgreSQL
-engine = create_engine(PG_DATABASE_URL)
+# engine = create_engine(PG_DATABASE_URL)
+engine = create_engine("postgresql+psycopg2://innktnbgftlllfaggzow:urpxujxabqmbtmpkprbkvrtaqvkjss@9qasp5v56q8ckkf5dc.leapcellpool.com:6438/zekjptozpulnobhzqrlu?sslmode=require")
 
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
