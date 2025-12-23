@@ -223,6 +223,9 @@ async def login_user(
     result = db.execute(select(models.User).where(models.User.username == username))
     user = result.scalar_one_or_none()
 
+    if user.role == 'beginner':
+        return templates.TemplateResponse("login.html", {"request": request, "error": "L'utente deve essere registrato da un amministratore."})
+
     if not user or not verify_password(password, user.hashed_password):
         return templates.TemplateResponse("login.html", {"request": request, "error": "Incorrect username or password"})
 

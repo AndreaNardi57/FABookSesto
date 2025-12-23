@@ -59,11 +59,14 @@ def return_book(db: Session, id: str):
     return db_book
 
 def get_user_by_username(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()
+    db_user = db.query(User).filter(User.username == username).first()
+    return db_user
 
 def authenticate_user(db: Session, username: str, password: str):
-    user = get_user_by_username(db, username)
-    if not user or not verify_password(password, user.hashed_password):
+    db_user = get_user_by_username(db, username)
+    if db_user.role == 'beginner':
+        return None
+    if not db_user.username or not verify_password(password, user.hashed_password):
         return None
     return user
 
