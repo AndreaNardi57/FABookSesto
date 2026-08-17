@@ -1,2 +1,26 @@
-venv/*
-__pycache_
+# Virtual environments
+venv/
+bin/
+lib/
+lib64
+include/
+pyvenv.cfg
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment / secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+database.py.local-working
