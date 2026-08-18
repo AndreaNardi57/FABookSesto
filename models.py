@@ -9,6 +9,7 @@ Date_Value = 'CURRENT_DATE'
 
 class Book(Base):
     __tablename__ = "storico"
+    __table_args__ = {"schema": "biblio"}
 
     id = Column(Integer, primary_key=True, index=True)
     operazione = Column(String, nullable=False)
@@ -19,6 +20,7 @@ class Book(Base):
     
 class User(Base):
     __tablename__ = "users"
+    __table_args__ = {"schema": "biblio"}
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
