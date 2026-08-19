@@ -24,3 +24,7 @@ __pycache__/
 # OS
 .DS_Store
 database.py.local-working
+
+# Local logs
+access_log
+error_log
