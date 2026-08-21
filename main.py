@@ -17,7 +17,7 @@ from auth import get_password_hash, verify_password
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
 from sqlalchemy.orm import selectinload
-
+import os
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
@@ -26,7 +26,14 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Library Management System")
 
 # Abilito sessioni
-app.add_middleware(SessionMiddleware, secret_key="supersegreta123")
+## app.add_middleware(SessionMiddleware, secret_key="supersegreta123")
+
+SESSION_SECRET = os.environ["SESSION_SECRET"]
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=SESSION_SECRET
+)
 
 # Setup templates and static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -34,7 +41,7 @@ templates = Jinja2Templates(directory="templates")
 PerPage = 15
 page = 1
 
-async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)) -> Optional[models.User]:
+def get_current_user(request: Request, db: Session = Depends(get_db)) -> Optional[models.User]:
     username = request.cookies.get("libreria_user")
     if not username:
         return None
@@ -213,12 +220,12 @@ async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 @app.post("/login/html")
-async def login_user(
+def login_user(
     response: Response,
     request: Request,
     username: str = Form(...),
     password: str = Form(...),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     result = db.execute(select(models.User).where(models.User.username == username))
     user = result.scalar_one_or_none()
@@ -236,7 +243,7 @@ async def login_user(
 
 # --- LOGOUT ---
 @app.get("/logout")
-async def logout_user(response: Response):
+def logout_user(response: Response):
     response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(key="libreria_user")
     return response
@@ -247,7 +254,7 @@ async def register_page(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
 @app.post("/register/html")
-async def register_user(
+def register_user(
     request: Request,
     username: str = Form(...),
     password: str = Form(...),
@@ -255,7 +262,7 @@ async def register_user(
     fname: str = Form(...),
     lname: str = Form(...),
     mailaddr: str = Form(...),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     result = db.execute(select(models.User).where(models.User.username == username))
     if result.scalar_one_or_none():
